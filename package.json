@@ -1,0 +1,12 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "This project is an embeddable AI chatbot system powered by Gemini AI, designed for integration into existing web applications. It includes a floating chatbot widget, an Admin Portal for managing prompts and file uploads, and a Python FastAPI backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
