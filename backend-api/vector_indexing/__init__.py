@@ -1,0 +1,1 @@
+# Handles FAISS or ChromaDB vector indexing
