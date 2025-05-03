@@ -1,104 +1,58 @@
+# 📘 ChatBot 專案
 
-# 📘 System Specification – Embedded AI Chatbot with Admin Portal
-
-## 1. Overview
-An embeddable, floating AI chatbot for web applications, using Gemini AI to answer user questions based on unstructured documents in a specific folder. It includes an Admin Portal to manage prompts and file uploads. The backend is developed in Python with API-based architecture.
-
----
-
-## 2. System Components
-
-### 2.1 Frontend – Chatbot Widget
-- **Tech**: Web Component (Lit)
-- **Features**:
-  - Embeddable/floating on any existing web page
-  - Toggle button (open/minimize)
-  - Chat interface with loading and typing indicators
-  - Message history (session-based or persistent)
-  - Supports light/dark mode (optional)
-
-### 2.2 Frontend – Admin Portal
-- **Tech**: Vue.js
-- **Features**:
-  - **Prompt Configuration**:
-    - Set system prompt/instructions for Gemini
-    - Upload or edit prompt templates (per department or use case)
-  - **File Upload**:
-    - Upload unstructured files (PDF, DOCX, TXT)
-    - File tags or categories 
-    - Auto-index on upload
-  - **File Management**:
-    - View list of indexed files with timestamp
-    - Delete or reindex specific files
-  - **Usage Log** :
-    - View recent chat queries
-    - Export logs or summary
+## 目錄
+1. [專案簡介](#1-專案簡介)
+2. [系統架構](#2-系統架構)
+   - [前端 – 聊天機器人 Widget](#21-前端--聊天機器人-widget)
+   - [前端 – 管理後台](#22-前端--管理後台)
+   - [後端 – Python API](#23-後端--python-api)
+3. [部署方式](#3-部署方式)
+4. [聯絡方式](#4-聯絡方式)
 
 ---
 
-## 3. Backend (Python API)
-- **Framework**: FastAPI preferred (high performance, async-ready)
-- **Endpoints**:
-  - `/chat`: Accepts user query and returns Gemini response
-  - `/admin/upload`: Handles file uploads
-  - `/admin/prompts`: Get/set system prompt templates
-  - `/admin/files`: List/delete/reindex files
-  - `/status`: Health check
+## 1. 專案簡介
+本專案是一個可嵌入的 AI 聊天機器人，並包含管理後台，提供以下功能：
 
-- **Modules**:
-  - File Processor: Extracts text from PDF/DOCX/TXT
-  - Vector Indexing: FAISS or ChromaDB (performs semantic search)
-  - Prompt Engine: Combines system prompt + retrieved content + user query
-  - Gemini Connector: Sends prompt to Gemini AI and returns answer
+- 使用 Gemini AI 回答使用者問題。
+- 支援檔案上傳與管理。
+- 提供 API 架構的後端服務。
 
 ---
 
-## 4. AI Chatbot – Gemini Integration
-- **Model**: Gemini Pro or Enterprise
-- **Prompt Flow**:
-  - Load system prompt (configurable)
-  - Retrieve top-N relevant content from file embeddings
-  - Construct structured prompt (context + question)
-  - Send to Gemini, return answer
+## 2. 系統架構
+
+### 2.1 前端 – 聊天機器人 Widget
+- **技術**：Lit Web Component
+- **功能**：
+  - 可嵌入任意網頁。
+  - 支援開啟/最小化按鈕。
+  - 提供聊天介面與歷史記錄。
+
+### 2.2 前端 – 管理後台
+- **技術**：Vue.js
+- **功能**：
+  - 設定系統提示與範本。
+  - 上傳與管理檔案。
+  - 查看使用記錄。
+
+### 2.3 後端 – Python API
+- **框架**：FastAPI
+- **功能**：
+  - 提供聊天 API。
+  - 支援檔案上傳與索引。
+  - 整合 Gemini AI。
 
 ---
 
-## 5. File Management & Embedding
-- **Storage**: Local folder or mounted volume (e.g., `/data/unstructured`)
-- **Supported File Types**: PDF, DOCX, TXT
-- **Indexing**: Scheduled or triggered by upload
-- **Embedding Storage**: Local vector DB (e.g., FAISS/Chroma) or cloud option
+## 3. 部署方式
+- 使用 Docker 容器化後端。
+- 前端靜態檔案可透過任意 Web 伺服器部署。
 
----
+### 範例指令
+```bash
+# 建立 Docker 映像檔
+docker build -t chatbot-backend .
 
-## 6. Architecture Diagram
-```
-[ Web App ]
-   ↓ embed
-[ Floating Chat Widget ] ←→ [ Python Backend API ] ←→ [ Gemini AI ]
-                                     ↑
-                           [ Prompt Config & File Index ]
-                                     ↑
-                           [ Admin Portal (Web UI) ]
-                                     ↑
-                      [ File Uploads & Embeddings Storage ]
-```
-
----
-
-## 7. Integration & Deployment
-- **Frontend Widget**: Simple script or Vue component
-- **Backend**: Dockerized, API with environment-configurable settings
-- **Admin Auth**: Basic login or OAuth2 for admin portal
-- **Security**:
-  - HTTPS, API keys/token-based access
-  - File upload validation (file size, type)
-  - Input sanitization & rate limiting
-
----
-
-## 8. Optional Enhancements
-- Multiple prompt presets per use case
-- User feedback on chatbot answers
-- WebSocket support for real-time chat
-- File change monitor for automatic re-index
+# 啟動容器
+docker run -d -p 8000:8000 chatbot-backend
