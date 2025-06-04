@@ -12,6 +12,7 @@ export class ChatBotWidget extends LitElement {
       bottom: 20px;
       right: 20px;
       font-family: Arial, sans-serif;
+      z-index: 9999;
     }
 
     .chat-toggle {
@@ -24,19 +25,39 @@ export class ChatBotWidget extends LitElement {
     }
 
     .chat-window {
-      width: 300px;
-      height: 400px;
+      width: 320px;
+      height: 420px;
       border: 1px solid #ccc;
       border-radius: 8px;
       display: flex;
       flex-direction: column;
       background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .header {
+      background: #6200ee;
+      color: #fff;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .header button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
     }
 
     .messages {
       flex: 1;
       padding: 8px;
       overflow-y: auto;
+      background: #fafafa;
     }
 
     .message {
@@ -107,13 +128,18 @@ export class ChatBotWidget extends LitElement {
     this.userInput = '';
     this.requestUpdate();
 
-    // Simulate bot response
-    await new Promise((r) => setTimeout(r, 500));
-    this.messages = [
-      ...this.messages,
-      { sender: 'bot', text: `You said: ${text}` },
-    ];
-    this.requestUpdate();
+    try {
+      const res = await fetch('/chat/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      })
+      const data = await res.json()
+      this.messages = [...this.messages, { sender: 'bot', text: data.response }]
+    } catch {
+      this.messages = [...this.messages, { sender: 'bot', text: 'Error' }]
+    }
+    this.requestUpdate()
   }
 
   render() {
@@ -124,6 +150,10 @@ export class ChatBotWidget extends LitElement {
       ${this.isOpen
         ? html`
             <div class="chat-window">
+              <div class="header">
+                <span>ChatBot</span>
+                <button @click=${this.toggleChat}>✕</button>
+              </div>
               <div class="messages">
                 ${this.messages.map(
                   (m) => html`
