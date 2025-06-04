@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix='/status')
+router = APIRouter(prefix="/status", tags=["status"])
 
-@router.get('/')
+
+@router.get("/")
 def status():
+    """Return service status."""
     return {"status": "ok"}
