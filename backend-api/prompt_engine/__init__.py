@@ -1,8 +1,23 @@
-"""Simple prompt construction utilities."""
+"""Prompt construction utilities used for Gemini requests."""
+
+from __future__ import annotations
+
+from typing import Optional
+
 
 SYSTEM_PROMPT = "You are a helpful assistant."
 
 
-def build_prompt(user_input: str) -> str:
-    """Combine the system prompt with user input."""
-    return f"{SYSTEM_PROMPT}\nUser: {user_input}"
+def set_system_prompt(text: str) -> None:
+    """Override the global system prompt."""
+    global SYSTEM_PROMPT
+    SYSTEM_PROMPT = text
+
+
+def build_prompt(user_input: str, *, context: Optional[str] = None) -> str:
+    """Combine the system prompt, optional context and user input."""
+    sections = [SYSTEM_PROMPT]
+    if context:
+        sections.append(f"Context:\n{context.strip()}")
+    sections.append(f"User: {user_input}")
+    return "\n".join(sections)
