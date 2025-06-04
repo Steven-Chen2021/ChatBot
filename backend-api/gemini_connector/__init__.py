@@ -1,11 +1,23 @@
-# filepath: c:\Project\ChatBot\backend-api\gemini_connector\__init__.py
+"""Simple Gemini API connector stub."""
+
 import requests
 
-# Connects and sends prompt to Gemini API
-def query_gemini(prompt: str):
-    response = requests.post(
-        "https://gemini-api.example.com/query",
-        json={"prompt": prompt},
-        headers={"Authorization": "Bearer YOUR_API_KEY"}
-    )
-    return response.json()
+GEMINI_ENDPOINT = "https://gemini-api.example.com/query"
+API_KEY = "YOUR_API_KEY"
+
+
+def query_gemini(prompt: str) -> str:
+    """Send the prompt to the Gemini API and return the response text."""
+    try:
+        response = requests.post(
+            GEMINI_ENDPOINT,
+            json={"prompt": prompt},
+            headers={"Authorization": f"Bearer {API_KEY}"},
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data.get("response", "")
+    except requests.RequestException:
+        # In this demo environment we simply echo the prompt
+        return f"Gemini response for: {prompt}"
